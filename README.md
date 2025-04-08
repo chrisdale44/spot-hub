@@ -1,4 +1,8 @@
-# Spot Hub
+<span style="background: #157; padding: 20px; display: block; font-weight: 600; font-size: 2rem;">Spot Hub</span>
+
+<span style="height:100px; width: 100px;">![](/assets/spot-hub-heading.png)</span>
+
+<img src="/assets/spot-hub-heading.png" width="48px">
 
 A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe - a current gap in the skateboarding community which has not been filled by the existing solutions.
 
