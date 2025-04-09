@@ -1,10 +1,20 @@
-<img src="/assets/spot-hub-heading.png" height="100px">
+<img src="/assets/spot-hub-heading.png" height="80px">
 
 A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe - a current gap in the skateboarding community which has not been filled by the existing solutions.
 
 ## Key Features
 
-### Image Upload Geolocation
+### Image GeoLocation
+
+In order to streamline the user experience of pinning skate spots, the image upload feature will use image geolocation data where possible to automatically move map pins to the correct location.
+
+![](/assets/spot-upload.gif)
+
+#### Batch Uploads
+
+To streamline the process of uploading batches of images, geolocation data is extracted from each image and used to group images together that are in close proximity to each other as they are likely multiple images of the same spot. A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
+
+![](/assets/batch-upload.gif)
 
 ### Data Pre-Fetching Strategy
 
