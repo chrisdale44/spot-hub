@@ -1,24 +1,18 @@
 <img src="/assets/spot-hub-heading.png" height="80px">
 
-A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe - a current gap in the skateboarding community which has not been filled by the existing solutions.
+A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe - a current gap in the skateboarding community which has not been filled by any of the existing solutions. Spot Hub is a project I've been wanting to build for many years and has been an excellent learning experience to complete an MVP version.
 
-## Key Features
+## MVP Objectives
 
-### Image GeoLocation
+- **Optimized Performance:** Ensure smooth, lag-free rendering of thousands — potentially tens of thousands — of map pins around the globe.
 
-In order to streamline the user experience of pinning skate spots, the image upload feature will use image geolocation data where possible to automatically move map pins to the correct location.
+- **Streamlined Content Management:** Simplify the process of adding spots, images, and related information.
 
-![](/assets/spot-upload.gif)
+- **Intuitive Discovery:** Enable effortless spot filtering and search functionality.
 
-#### Batch Uploads
+- **Offline Accessibility:** Deliver a seamless user experience even without an internet connection.
 
-To streamline the process of uploading batches of images, geolocation data is extracted from each image and used to group images together that are in close proximity to each other as they are likely multiple images of the same spot. A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
-
-![](/assets/batch-upload.gif)
-
-### Data Pre-Fetching Strategy
-
-### Offline-First Caching Strategy
+- **Cross-Platform Compatibility:** Full functionality across Web, Android, and iOS devices.
 
 ## Technical Implementation
 
@@ -76,6 +70,42 @@ An overview of the technologies used and why they were selected
 - **Git** and **Github**
   - For Version Controlling the codebase including feature branching and managing Production and Staging branches
 
+## Technical Challenges
+
+### Spot Thumbnails on Mobile
+
+## Cool Features
+
+### Image GeoLocation
+
+In order to streamline the user experience of adding pins to the map, the image upload feature uses image geolocation data (if available) to automatically move map pins to the correct location.
+
+![](/assets/spot-upload.gif)
+
+#### Image Batch Uploads
+
+To streamline the process of uploading batches of images, geolocation data is extracted from each image and used to group images together that are in close proximity to each other as they are likely multiple images of the same spot. A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
+
+![](/assets/batch-upload.gif)
+
+### Data Pre-Fetching and Caching Strategy
+
+Spot Hub uses a grid-based system for data fetching in order to simplify caching and increase the likelihood of there being cached results when fetching data. Each grid square has a unique ID based on its' coordinates. Two types of spot data fetches are made to the database: shallow and deep. Shallow spot data provides enough data to display map pins and their thumbnails, whereas deep spot data provides all data about a spot. The easiest way to show how spot data is pre-fetched is using a search radius area, as shown below:
+
+![](/assets/spot-data-fetching.jpg)
+
+When the page initially loads, a bounding box of relevant grid squares is calculated (shown in green below) based on the selected/default search area. A deep request is made to the database for this data so that when the user interacts with map pins in this search area, no time is spent waiting for spot data to load. Upon successful response from the database, the data and list of corresponding grid square IDs, are stored in app state and cached in indexedDB along with a cache timestamp.
+
+At the same time this deep request is being made, a second request is also made to the database in the background to shallow fetch a copy of _all_ spot data (providing one is not already found in cache).
+
+![](/assets/spot-data-fetching-2.jpg)
+
+As the user moves the search area around the map, map pins are instantly displayed using the shallow spot data already available. The cached list of grid ID's is used to determine which grid squares already has freshly-cached deep spot data, and which need to be requested from the database (shown in orange below). Using an array of bounding boxes, a single request is then made to the database to deep fetch data for the orange area only, reducing the amount of data transferred and thus request latency too.
+
+![](/assets/spot-data-fetching-3.jpg)
+
+### Offline-First Caching Strategy
+
 ## Deprecated Tech
 
 Libraries implemented but later removed or replaced with better alternatives
@@ -92,10 +122,6 @@ Libraries implemented but later removed or replaced with better alternatives
   - Used for handling SQL queries to PlanetScale and migration generation but no longer needed after switching to Supabase
 - **SendGrid**
   - Email API service used to handle passwordless 'magic-link' sign-in. Deprecated in favour of using OAuth.
-
-## Technical Challenges
-
-### Spot Thumbnails on Mobile
 
 ## Next Steps
 
