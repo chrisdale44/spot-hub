@@ -1,6 +1,6 @@
 <img src="/assets/spot-hub-heading.png" height="80px">
 
-A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe - a current gap in the skateboarding community which has not been filled by any of the existing solutions. Spot Hub is a project I've been wanting to build for many years and has been an excellent learning experience to complete an MVP version.
+A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe.
 
 ## MVP Objectives
 
@@ -8,11 +8,11 @@ A Progressive Web App for mapping skateboarding spots and skateboarding media ac
 
 - **Streamlined Content Management:** Simplify the process of adding spots, images, and related information.
 
-- **Intuitive Discovery:** Enable effortless spot filtering and search functionality.
-
-- **Offline Accessibility:** Deliver a seamless user experience even without an internet connection.
+- **Intuitive Discovery:** Enable effortless filtering of spots and search functionality.
 
 - **Cross-Platform Compatibility:** Full functionality across Web, Android, and iOS devices.
+
+- **Offline Accessibility:** Deliver a seamless user experience even without an internet connection.
 
 ## Technical Implementation
 
@@ -70,41 +70,46 @@ An overview of the technologies used and why they were selected
 - **Git** and **Github**
   - For Version Controlling the codebase including feature branching and managing Production and Staging branches
 
-## Technical Challenges
+## Performance Optimisations
 
-### Spot Thumbnails on Mobile
+### WebGL Layer
 
-## Cool Features
+Many JavaScript map libraries use DOM nodes to render map layers, such as map pins. However, this approach lacks scalability — maps with thousands of pins often suffer from sluggish performance. A common workaround is clustering pins to limit the number displayed at once, but I believe this compromises user experience. Instead, I have implemented a solution using DeckGL, a WebGL library that leverages GPU acceleration for significantly faster rendering and smoother interactivity, resulting in a highly scalable map pin layer.
 
-### Image GeoLocation
+### Images
 
-In order to streamline the user experience of adding pins to the map, the image upload feature uses image geolocation data (if available) to automatically move map pins to the correct location.
-
-![](/assets/spot-upload.gif)
-
-#### Image Batch Uploads
-
-To streamline the process of uploading batches of images, geolocation data is extracted from each image and used to group images together that are in close proximity to each other as they are likely multiple images of the same spot. A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
-
-![](/assets/batch-upload.gif)
+Spot Hub uses Cloudinary to store images as their CDN provides low-latency delivery worldwide. Cloudinary is configured to automatically optimise images as they are uploaded (available to admin users only). Images are compressed, converted to WebP format, resized to a maximum dimension of 1000px, and watermarked. Additionally, cropped thumbnail versions are generated to provide a smaller, optimised image for each spot.
 
 ### Data Pre-Fetching and Caching Strategy
 
-Spot Hub uses a grid-based system for data fetching in order to simplify caching and increase the likelihood of there being cached results when fetching data. Each grid square has a unique ID based on its' coordinates. Two types of spot data fetches are made to the database: shallow and deep. Shallow spot data provides enough data to display map pins and their thumbnails, whereas deep spot data provides all data about a spot. The easiest way to show how spot data is pre-fetched is using a search radius area, as shown below:
+Spot Hub uses a grid-based system for data fetching in order to simplify data caching. Each grid square has a unique ID based on its' coordinates. On initial page load, two concurrent requests for spot data are made to the database:
 
-![](/assets/spot-data-fetching.jpg)
-
-When the page initially loads, a bounding box of relevant grid squares is calculated (shown in green below) based on the selected/default search area. A deep request is made to the database for this data so that when the user interacts with map pins in this search area, no time is spent waiting for spot data to load. Upon successful response from the database, the data and list of corresponding grid square IDs, are stored in app state and cached in indexedDB along with a cache timestamp.
-
-At the same time this deep request is being made, a second request is also made to the database in the background to shallow fetch a copy of _all_ spot data (providing one is not already found in cache).
+1. Fetch a shallow set of spot data for all spots worldwide. Shallow spot data provides enough data to display map pins and their thumbnails but does not contain all the data about each spot. If there are over 5000 spots worldwide (~1MB shallow data) then multiple paginated requests are made to the database until all spots are fetched. Fetching this shallow spot data up front means that browsing, filtering and displaying map pins worldwide is instant.
+2. Pre-fetch complete spot data for grid squares overlapping the visible search area. This could be the users' viewport, or in the example below, is a 25km search radius (pre-fetched grid squares highlighted in green). Grid square ID's along with timestamp and cache depth (shallow or complete) are stored in IndexedDB to prevent future duplicate requests for the same grid squares.
 
 ![](/assets/spot-data-fetching-2.jpg)
 
-As the user moves the search area around the map, map pins are instantly displayed using the shallow spot data already available. The cached list of grid ID's is used to determine which grid squares already has freshly-cached deep spot data, and which need to be requested from the database (shown in orange below). Using an array of bounding boxes, a single request is then made to the database to deep fetch data for the orange area only, reducing the amount of data transferred and thus request latency too.
+As the user moves their search area (or viewport) around the map, map pins are instantly displayed using the shallow spot data and full spot data is pre-fetched in the background after determining which grid squares have not been previously fetched (shown in orange below). These orange grid square ID's are then cross referenced with the shallow spot data to determine which ones contain spots and only make a database request if any grid squares contain spots, preventing unnecessary calls to the database.
+
+If the user interacts with a map pin before the pre-fetched full spot data has been received then a request is made to the database for that single spot data.
+
+In order to prevent requesting too many grid squares at once when the user zooms out on the map, grid squares are only requested below a certain zoom level and maximum total number of grid squares.
 
 ![](/assets/spot-data-fetching-3.jpg)
 
 ### Offline-First Caching Strategy
+
+## User Experience
+
+### Image Geolocation
+
+The user experience of adding spots around the globe is streamlined by extracting image geolocation data (if available) to automatically move map pins to their correct location.
+
+![](/assets/spot-upload.gif)
+
+The batch upload features allows up to 60 images to be selected at once. It uses image geolocation data to group images in close proximity together (i.e. photos of the same spot). A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
+
+![](/assets/batch-upload.gif)
 
 ## Deprecated Tech
 
@@ -130,12 +135,9 @@ Libraries implemented but later removed or replaced with better alternatives
 - Offline-first not working fully
 - Improve offline fallbacks
 - Improve loading states and add a loading screen animation
-- Improve UX of side nav filters, especially tags
 - Improve security of form fields against XSS and DDOS attacks
 - Fix Modal top margin on mobile
 - Reduce inital page load speeds, add further code splitting by lazy loading client components
-- Geolocation extraction from uploaded images not working on mobile
-- Upgrade React version once other libraries add support
 
 ### Beta Release Goals
 
