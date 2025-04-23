@@ -1,4 +1,6 @@
-<img src="/assets/spot-hub-heading.png" height="80px">
+<a href="https://spot-hub.app"><img src="/assets/spot-hub-heading.png" height="80px"></a>
+
+<a href="https://spot-hub.app">spot-hub.app</a>
 
 **A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe.**
 
@@ -6,7 +8,7 @@ Currently in Alpha Release phase, Spot Hub is a project I plan to release public
 
 ## Objectives
 
-- **Optimised Performance:** Ensure fast, smooth and lag-free rendering of thousands — potentially tens of thousands — of map pins around the globe.
+- **Optimised Performance:** Ensure fast, smooth and lag-free rendering of thousands — potentially tens of thousands — of map pins around the world.
 
 - **Streamlined Content Management:** Simplify the process of adding spots, images, and related information.
 
