@@ -31,10 +31,10 @@ An overview of the technologies used and why they were selected
   - Server Actions for faster, secure, cached calls to the database
 - **Jotai**
   - Lightweight, simple, atomic State Management library for global state
-- **MapLibre**
-  - Free, Open Source Mapping Library (fork of MapBox) with great user experience
+- **MapLibre GL**
+  - Free, Open Source WebGL Mapping Library (fork of MapBox) for smooth map rendering using GPU acceleration
 - **DeckGL**
-  - WebGL-powered visualisation library for a highly scalable map pin layer using GeoJSON
+  - WebGL visualisation library for a highly scalable map pin layer using GPU acceleration
 - **Supabase**
   - Open Source Serverless PostgreSQL database allowing for affordable demand-based scalability
   - PostGIS extension for performant GeoSpatial data querying and indexing
