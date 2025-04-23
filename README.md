@@ -1,6 +1,8 @@
 <img src="/assets/spot-hub-heading.png" height="80px">
 
-A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe. Currently in Alpha Release phase, Spot Hub is a project I plan to release publically later this year to fill a gap in the skateboarding community for discovering locations and street obstacles worldwide and the history of tricks done at each spot.
+**A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe.**
+
+Currently in Alpha Release phase, Spot Hub is a project I plan to release publically later this year to fill a gap in the skateboarding community for discovering locations and street obstacles worldwide and the history of tricks done at each spot.
 
 ## Objectives
 
