@@ -1,10 +1,10 @@
 <img src="/assets/spot-hub-heading.png" height="80px">
 
-A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe.
+A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe. Currently in Alpha Release phase, Spot Hub is a project I plan to release publically later this year to fill a gap in the skateboarding community for discovering locations and street obstacles worldwide and the history of tricks done at each spot.
 
-## MVP Objectives
+## Objectives
 
-- **Optimized Performance:** Ensure smooth, lag-free rendering of thousands — potentially tens of thousands — of map pins around the globe.
+- **Optimised Performance:** Ensure fast, smooth and lag-free rendering of thousands — potentially tens of thousands — of map pins around the globe.
 
 - **Streamlined Content Management:** Simplify the process of adding spots, images, and related information.
 
@@ -12,16 +12,16 @@ A Progressive Web App for mapping skateboarding spots and skateboarding media ac
 
 - **Cross-Platform Compatibility:** Full functionality across Web, Android, and iOS devices.
 
-- **Offline Accessibility:** Deliver a seamless user experience even without an internet connection.
+- **Cost-Efficient Scalability:** Scale dynamically while minimising infrastructure expenses.
 
 ## Technical Implementation
 
 An overview of the technologies used and why they were selected
 
-- **React 18**
+- **React**
   - Modern Javascript Library for building reusable UI components
   - Has a rich developer community and ecosystem of compatible libraries
-- **NextJS 15**
+- **NextJS**
   - React-based framework for simple implementation of SSR for faster page load times and improved SEO
   - Server Components for automatic code splitting and faster data fetching
   - Server Actions for faster, secure, cached calls to the database
@@ -30,16 +30,17 @@ An overview of the technologies used and why they were selected
 - **MapLibre**
   - Free, Open Source Mapping Library (fork of MapBox) with great user experience
 - **DeckGL**
-  - WebGL-powered visualisation library for a highly scalable map pins layer using GeoJSON
+  - WebGL-powered visualisation library for a highly scalable map pin layer using GeoJSON
 - **Supabase**
-  - Open Source PostgreSQL cloud database with automatically built RESTful API's
+  - Open Source Serverless PostgreSQL database allowing for affordable demand-based scalability
   - PostGIS extension for performant GeoSpatial data querying and indexing
   - PostgreSQL functions for complex querying
   - Row Level Security for granular role-based database access
+  - Automatically built RESTful API's reduces the need to manage my own CRUD endpoints
 - **Mega**
-  - For automated database back-up syncing to the cloud
+  - For automated database back-up synced to the cloud
 - **Google OAuth**
-  - Secure, trusted User Authentication
+  - Simple, secure User Authentication without the need to store users passwords
 - **Yup**
   - Form validation library to prevent errors and improve user experience
 - **Cloudinary CDN**
@@ -74,11 +75,13 @@ An overview of the technologies used and why they were selected
 
 ### WebGL Layer
 
-Many JavaScript map libraries use DOM nodes to render map layers, such as map pins. However, this approach lacks scalability — maps with thousands of pins often suffer from sluggish performance. A common workaround is clustering pins to limit the number displayed at once, but I believe this compromises user experience. Instead, I have implemented a solution using DeckGL, a WebGL library that leverages GPU acceleration for significantly faster rendering and smoother interactivity, resulting in a highly scalable map pin layer.
+Many JavaScript map libraries use DOM nodes to render map layers, such as map pins. However, this approach lacks scalability as maps with thousands of pins will suffer from sluggish performance. Instead, Spot Hub uses DeckGL, a WebGL library that leverages GPU acceleration for significantly faster rendering and smoother interactivity, resulting in a highly scalable map pin layer.
 
 ### Images
 
-Spot Hub uses Cloudinary to store images as their CDN provides low-latency delivery worldwide. Cloudinary is configured to automatically optimise images as they are uploaded (available to admin users only). Images are compressed, converted to WebP format, resized to a maximum dimension of 1000px, and watermarked. Additionally, cropped thumbnail versions are generated to provide a smaller, optimised image for each spot.
+Spot Hub uses Cloudinary to store images as their CDN provides low-latency delivery worldwide. Cloudinary is configured to automatically optimise images as they are uploaded (a feature available to admin users only). Images are compressed, converted to WebP format, resized to a maximum dimension of 1000px, and watermarked. Additionally, cropped thumbnail versions are generated to provide a smaller, optimised image for each spot.
+
+Spot Hub also uses a combination of Intersection Observer and lazy-loading (using NextJS Image component) to reduce the number of images loaded and thus initial page load speeds.
 
 ### Data Pre-Fetching and Caching Strategy
 
@@ -93,11 +96,28 @@ As the user moves their search area (or viewport) around the map, map pins are i
 
 If the user interacts with a map pin before the pre-fetched full spot data has been received then a request is made to the database for that single spot data.
 
-In order to prevent requesting too many grid squares at once when the user zooms out on the map, grid squares are only requested below a certain zoom level and maximum total number of grid squares.
+In order to prevent requesting too many grid squares at once when the user zooms out on the map, grid squares are only requested below a certain zoom level.
 
 ![](/assets/spot-data-fetching-3.jpg)
 
-### Offline-First Caching Strategy
+### Local-First Caching Strategy
+
+![](/assets/spot-hub-caching.png)
+
+The flow for fetching spot data:
+
+1. Check IndexedDB <br/>
+   1.a. If found, check cache timestamp <br/>
+   1.b. If data is fresh return data, otherwise continue
+2. Call to Server Action (running on Netlify Edge Server)
+3. Check Redis cache <br/>
+   3.a. If found, check cache timestamp <br/>
+   3.b. If data is fresh return data, otherwise continue
+4. HTTP fetch to Supabase <br/>
+   4.a. Edge Server checks in-memory cache for previous matching request <br/>
+   4.b. If found, check cache timestamp <br/>
+   4.c. If data is fresh return data, otherwise continue <br/>
+5. Request made to Supabase
 
 ## User Experience
 
@@ -107,26 +127,15 @@ The user experience of adding spots around the globe is streamlined by extractin
 
 ![](/assets/spot-upload.gif)
 
-The batch upload features allows up to 60 images to be selected at once. It uses image geolocation data to group images in close proximity together (i.e. photos of the same spot). A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
+The batch upload features allows up to 50 images to be selected at once. It uses image geolocation data to automatically group images in close proximity together (i.e. photos of the same spot). A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
 
 ![](/assets/batch-upload.gif)
 
-## Deprecated Tech
+## CI/CD
 
-Libraries implemented but later removed or replaced with better alternatives
+### Staging and Production Environments
 
-- **LeafletJS**
-  - The standard choice of free, Open Source map libraries but I found it to be buggy and required too much patching to work as desired
-- **Google Maps**
-  - The leading, most advanced Javascipt maps library. Deprecated in favour of the free, Open Source solution, MapLibre, due to concerns regarding affordability of Google Maps services at scale
-- **PixiJS**
-  - A WebGL library for rendering 2D graphics, initially used for rendering map pins over the top of LeafletJS via my own custom middleware. However, after switching to Google Maps, DeckGL appeared to be the standard, easier WebGL library to integrate which didn't require any custom middleware
-- **PlanetScale**
-  - Highly performant MySQL cloud database. After they sunset their generous free plan I looked to other database options and settled on Supabase which worked out for the best due to Postgres' powerful Geospatial library, POSTGis
-- **DrizzleORM**
-  - Used for handling SQL queries to PlanetScale and migration generation but no longer needed after switching to Supabase
-- **SendGrid**
-  - Email API service used to handle passwordless 'magic-link' sign-in. Deprecated in favour of using OAuth.
+Using Netlify and Github I have a very simple CI/CD workflow that automatically deploys commits to my Production or Staging Environments when changes are merged into to the `main` or `staging` branches. I also have a Staging and Production instance of the Supabase database to avoid any accidental or breaking changes made to the Production database during development.
 
 ## Next Steps
 
@@ -155,11 +164,13 @@ Libraries implemented but later removed or replaced with better alternatives
   - Implement **Vitest** for unit tests
   - Implement **React Testing Library** for integration tests
   - Implement **Playwright/Cypress** for end-to-end tests
+  - Integrate automated tests into CI/CD pipeline
 - **Stripe**
   - For handling a tiered pricing model to advanced app features
 
 ### Speculative Future Enhancements
 
 - **Legend State** or **Zero Sync** for local-first database syncing
+- **JSDoc** or **TypeScript** for type checking as the app grows in complexity
 - **Remix** as a more performant alternative to NextJS
 - **Svelte** or **SolidJS** as a more performant alternative to React
