@@ -115,15 +115,15 @@ The flow for fetching spot data:
 
 1. Check IndexedDB <br/>
    1.a. If found, check cache timestamp <br/>
-   1.b. If data is fresh return data, otherwise continue
+   1.b. If data is not stale return data, otherwise continue
 2. Call to Server Action (running on Netlify Edge Server)
 3. Check Redis cache <br/>
    3.a. If found, check cache timestamp <br/>
-   3.b. If data is fresh return data, otherwise continue
+   3.b. If data is not stale return data, otherwise continue
 4. HTTP fetch to Supabase <br/>
    4.a. Edge Server checks in-memory cache for previous matching request <br/>
    4.b. If found, check cache timestamp <br/>
-   4.c. If data is fresh return data, otherwise continue <br/>
+   4.c. If data is not stale return data, otherwise continue <br/>
 5. Request made to Supabase
 
 ## User Experience
@@ -145,15 +145,6 @@ The batch upload features allows up to 50 images to be selected at once. It uses
 Using Netlify and Github I have a very simple CI/CD workflow that automatically deploys commits to my Production or Staging Environments when changes are merged into to the `main` or `staging` branches. I also have a Staging and Production instance of the Supabase database to avoid any accidental or breaking changes made to the Production database during development.
 
 ## Next Steps
-
-### Alpha Release Known Issues
-
-- Offline-first not working fully
-- Improve offline fallbacks
-- Improve loading states and add a loading screen animation
-- Improve security of form fields against XSS and DDOS attacks
-- Fix Modal top margin on mobile
-- Reduce inital page load speeds, add further code splitting by lazy loading client components
 
 ### Beta Release Goals
 
