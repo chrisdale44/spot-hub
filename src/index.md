@@ -256,7 +256,7 @@ layout: layouts/base.njk
         <li>Pre-fetch complete spot data for grid squares overlapping the visible search area. This could be the users' viewport, or in the example below, is a 25km search radius (pre-fetched grid squares highlighted in green). Grid square ID's along with timestamp and cache depth (shallow or complete) are stored in IndexedDB to prevent future duplicate requests for the same grid squares.</li>
       </ol>
       <div class="my-6">
-        <img src="/assets/spot-data-fetching-2.jpg" alt="Spot data fetching visualisation" class="w-full">
+        <img src="/spot-hub/assets/spot-data-fetching-2.jpg" alt="Spot data fetching visualisation" class="w-full">
       </div>
       <p class="mb-4">
         As the user moves their search area (or viewport) around the map, map pins are instantly displayed using the shallow spot data and full spot data is pre-fetched in the background after determining which grid squares have not been previously fetched (shown in orange below). These orange grid square ID's are then cross referenced with the shallow spot data to determine which ones contain spots and only make a database request if any grid squares contain spots, preventing unnecessary calls to the database.
@@ -268,11 +268,11 @@ layout: layouts/base.njk
         In order to prevent requesting too many grid squares at once when the user zooms out on the map, grid squares are only requested below a certain zoom level.
       </p>
       <div class="my-6">
-        <img src="/assets/spot-data-fetching-3.jpg" alt="Spot data fetching visualisation" class="w-full">
+        <img src="/spot-hub/assets/spot-data-fetching-3.jpg" alt="Spot data fetching visualisation" class="w-full">
       </div>
       <h3 class="text-xl font-semibold mt-6 mb-3">Local-First Caching Strategy</h3>
       <div class="my-6">
-        <img src="/assets/spot-hub-caching.png" alt="Spot Hub caching strategy" class="w-full">
+        <img src="/spot-hub/assets/spot-hub-caching.png" alt="Spot Hub caching strategy" class="w-full">
       </div>
       <p class="mb-2">The flow for fetching spot data:</p>
       <ol class="list-decimal pl-6 space-y-1">
@@ -297,13 +297,13 @@ layout: layouts/base.njk
         The user experience of adding spots around the globe is streamlined by extracting image geolocation data (if available) to automatically move map pins to their correct location.
       </p>
       <div class="my-6">
-        <img src="/assets/spot-upload.gif" alt="Spot upload demonstration" class="w-full">
+        <img src="/spot-hub/assets/spot-upload.gif" alt="Spot upload demonstration" class="w-full">
       </div>
       <p class="mb-4">
         The batch upload features allows up to 50 images to be selected at once. It uses image geolocation data to automatically group images in close proximity together (i.e. photos of the same spot). A drag and drop interface then allows the user to make any corrections to the groups before creating each spot individually.
       </p>
       <div class="my-6">
-        <img src="/assets/batch-upload.gif" alt="Batch upload demonstration" class="w-full">
+        <img src="/spot-hub/assets/batch-upload.gif" alt="Batch upload demonstration" class="w-full">
       </div>
     </section>
     <section class="mb-8 text-sm w-full" id="ci-cd">
