@@ -13,7 +13,7 @@ layout: layouts/base.njk
     <div class="flex flex-col my-8 text-sm">
       <a href="https://spot-hub.app" class="text-blue-600 hover:text-blue-800 font-medium mb-6">spot-hub.app</a>
       <p class="mb-4">
-        <strong>A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe</strong>
+        <strong>A Progressive Web App for mapping skateboarding spots and skateboarding media across the globe.</strong>
       </p>
       <p class="text-gray-700 mb-4">
         Currently in Alpha Release phase, Spot Hub is a project I plan to release publicly later this year to fill a gap in the skateboarding community for discovering locations and street obstacles worldwide and the history of tricks done at each spot.
