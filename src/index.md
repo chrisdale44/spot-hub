@@ -4,10 +4,9 @@ layout: layouts/base.njk
 ---
 
 <div class="flex flex-col items-center text-md bg-white border-none focus:outline-none [box-shadow:rgba(0,_0,_0,_0.3)_0px_1px_4px_-1px] rounded">
-  <div class="bg-[#157] flex align-center justify-center w-full">
+  <div class="bg-[#157] flex align-center justify-center text-center w-full">
     <a href="https://spot-hub.app">
-      <h1 class="pacifico text-white text-4xl py-4">Spot Hub - Technical Overview</h1>
-      <!-- <img src="/assets/spot-hub-heading.png" alt="Spot Hub" height="80" class="h-20"> -->
+      <h1 class="pacifico text-white text-4xl p-4">Spot Hub - Technical Overview</h1>
     </a>
   </div>
   <div class="px-8 pb-8">
@@ -91,7 +90,7 @@ layout: layouts/base.njk
           <td class="py-3 px-4 align-top font-semibold">DeckGL</td>
           <td class="py-3 px-4">
             <ul class="list-disc pl-5">
-              <li>WebGL visualization for scalable map pin layers with GPU acceleration</li>
+              <li>WebGL visualisation for scalable map pin layers with GPU acceleration</li>
             </ul>
           </td>
         </tr>
@@ -250,14 +249,14 @@ layout: layouts/base.njk
       </ul>
       <h3 class="text-xl font-semibold mt-6 mb-3">Data Pre-Fetching and Caching Strategy</h3>
       <p class="mb-4">
-        Spot Hub uses a grid-based system for data fetching in order to simplify data caching. Each grid square has a unique ID based on its' coordinates. On initial page load, two concurrent requests for spot data are made to the database:
+        Spot Hub uses a grid-based system for data fetching in order to simplify data caching. Each grid square has a unique ID based on its coordinates. On initial page load, two concurrent requests for spot data are made to the database:
       </p>
       <ol class="list-decimal pl-6 space-y-2 mb-4">
         <li>Fetch a shallow set of spot data for all spots worldwide. Shallow spot data provides enough data to display map pins and their thumbnails but does not contain all the data about each spot. If there are over 5000 spots worldwide (~1MB shallow data) then multiple paginated requests are made to the database until all spots are fetched. Fetching this shallow spot data up front means that browsing, filtering and displaying map pins worldwide is instant.</li>
         <li>Pre-fetch complete spot data for grid squares overlapping the visible search area. This could be the users' viewport, or in the example below, is a 25km search radius (pre-fetched grid squares highlighted in green). Grid square ID's along with timestamp and cache depth (shallow or complete) are stored in IndexedDB to prevent future duplicate requests for the same grid squares.</li>
       </ol>
       <div class="my-6">
-        <img src="/assets/spot-data-fetching-2.jpg" alt="Spot data fetching visualization" class="w-full">
+        <img src="/assets/spot-data-fetching-2.jpg" alt="Spot data fetching visualisation" class="w-full">
       </div>
       <p class="mb-4">
         As the user moves their search area (or viewport) around the map, map pins are instantly displayed using the shallow spot data and full spot data is pre-fetched in the background after determining which grid squares have not been previously fetched (shown in orange below). These orange grid square ID's are then cross referenced with the shallow spot data to determine which ones contain spots and only make a database request if any grid squares contain spots, preventing unnecessary calls to the database.
@@ -269,7 +268,7 @@ layout: layouts/base.njk
         In order to prevent requesting too many grid squares at once when the user zooms out on the map, grid squares are only requested below a certain zoom level.
       </p>
       <div class="my-6">
-        <img src="/assets/spot-data-fetching-3.jpg" alt="Spot data fetching visualization" class="w-full">
+        <img src="/assets/spot-data-fetching-3.jpg" alt="Spot data fetching visualisation" class="w-full">
       </div>
       <h3 class="text-xl font-semibold mt-6 mb-3">Local-First Caching Strategy</h3>
       <div class="my-6">
